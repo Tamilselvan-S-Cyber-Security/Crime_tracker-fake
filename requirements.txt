@@ -1,0 +1,5 @@
+
+audio-recorder-streamlit>=0.0.10
+numpy>=2.2.3
+opencv-python>=4.11.0.86
+streamlit>=1.42.2
