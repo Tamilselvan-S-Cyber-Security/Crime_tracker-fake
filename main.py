@@ -84,7 +84,7 @@ def admin_dashboard():
     st.subheader("Generate Capture Link")
     if st.button("Generate New Link"):
         token = generate_capture_link()
-        base_url = st.experimental_get_query_params().get("base_url", [""])[0] or "http://localhost:5000"
+        base_url = st.query_params.get("base_url", "http://localhost:5000")
         capture_url = f"{base_url}?token={token}"
         st.session_state.capture_links[token] = datetime.now()
         st.code(capture_url)
@@ -112,21 +112,16 @@ def admin_dashboard():
 
 def main():
     # Check for capture token
-    token = st.experimental_get_query_params().get("token", [None])[0]
+    token = st.query_params.get("token")
+    path = st.query_params.get("path")
 
     if token:
         auto_capture_page(token)
-    else:
-        # Check if accessing admin route
-        path = st.experimental_get_query_params().get("path", [None])[0]
-
-        if path == "admin":
-            if not st.session_state.authenticated:
-                admin_login()
-            else:
-                admin_dashboard()
+    elif path == "admin" or not path:  # Show admin page for both /admin and root URL
+        if not st.session_state.authenticated:
+            admin_login()
         else:
-            st.error("Invalid access")
+            admin_dashboard()
 
 if __name__ == "__main__":
     main()
