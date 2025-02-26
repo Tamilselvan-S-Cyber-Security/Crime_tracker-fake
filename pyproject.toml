@@ -1,11 +1,22 @@
 [project]
-name = "repl-nix-workspace"
+name = "crime-tracker"
 version = "0.1.0"
-description = "Add your description here"
+description = "Crime tracking application using Streamlit"
+authors = [
+    { name = "S.Tamilselvan", email = "tamilselvan637986@gmail.com" }
+]
 requires-python = ">=3.11"
+
 dependencies = [
     "audio-recorder-streamlit>=0.0.10",
     "numpy>=2.2.3",
     "opencv-python>=4.11.0.86",
     "streamlit>=1.42.2",
 ]
+
+[tool.setuptools]
+packages = ["crime_tracker"]
+
+[build-system]
+requires = ["setuptools", "wheel"]
+build-backend = "setuptools.build_meta"
