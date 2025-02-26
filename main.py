@@ -218,10 +218,16 @@ def admin_dashboard():
             col1, col2 = st.columns([3, 1])
 
             with col1:
-                with st.expander("Capture Details"):
-                    st.text(f"Timestamp: {capture['timestamp']}")
-                    if 'metadata' in capture:
-                        st.json(capture['metadata'])
+                st.text(f"Timestamp: {capture['timestamp']}")
+                if 'metadata' in capture:
+                    st.text("Capture Details:")
+                    if capture['metadata'].get('has_audio'):
+                        st.text("✓ Audio recorded")
+                    st.text(f"Capture time: {capture['metadata'].get('capture_time', 'N/A')}")
+                    file_info = capture['metadata'].get('file_info', {})
+                    st.text(f"Image size: {file_info.get('image_size', 0) / 1024:.1f} KB")
+                    if capture['metadata'].get('has_audio'):
+                        st.text(f"Audio size: {file_info.get('audio_size', 0) / 1024:.1f} KB")
 
             with col2:
                 # Delete functionality
