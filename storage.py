@@ -29,12 +29,16 @@ def save_capture(image_data, audio_data, timestamp):
     metadata = {
         "timestamp": timestamp,
         "has_audio": audio_data is not None,
-        "capture_time": datetime.now().isoformat()
+        "capture_time": datetime.now().isoformat(),
+        "file_info": {
+            "image_size": os.path.getsize(image_path),
+            "audio_size": os.path.getsize(audio_path) if audio_path else 0
+        }
     }
 
     metadata_path = os.path.join(capture_dir, "metadata.json")
     with open(metadata_path, "w") as f:
-        json.dump(metadata, f)
+        json.dump(metadata, f, indent=2)
 
 def get_all_captures():
     """Retrieve all captures from storage"""
