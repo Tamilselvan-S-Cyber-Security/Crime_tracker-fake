@@ -1,11 +1,19 @@
 import os
 import json
 from datetime import datetime
-import base64
+import shutil
 
 # Create data directory if it doesn't exist
 DATA_DIR = "data"
 os.makedirs(DATA_DIR, exist_ok=True)
+
+def delete_capture(timestamp):
+    """Delete a capture directory and all its contents"""
+    capture_dir = os.path.join(DATA_DIR, timestamp)
+    if os.path.exists(capture_dir):
+        shutil.rmtree(capture_dir)
+        return True
+    return False
 
 def save_capture(image_data, audio_data, timestamp):
     """Save captured data to storage"""

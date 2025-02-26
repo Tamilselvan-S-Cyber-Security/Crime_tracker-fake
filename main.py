@@ -5,7 +5,7 @@ from datetime import datetime
 import os
 from audio_recorder_streamlit import audio_recorder
 from utils import is_admin, require_admin, generate_capture_link
-from storage import save_capture, get_all_captures
+from storage import save_capture, get_all_captures, delete_capture
 
 # Page config
 st.set_page_config(
@@ -22,6 +22,8 @@ if 'capture_links' not in st.session_state:
     st.session_state.capture_links = {}
 if 'capture_mode' not in st.session_state:
     st.session_state.capture_mode = 'single'
+if 'delete_confirmation' not in st.session_state:
+    st.session_state.delete_confirmation = {}
 
 # Mobile-friendly CSS
 st.markdown("""
@@ -39,6 +41,12 @@ st.markdown("""
         width: 100%;
         min-height: 3rem;
         margin: 0.5rem 0;
+    }
+
+    /* Delete button styling */
+    .delete-btn {
+        background-color: #ff4b4b !important;
+        color: white !important;
     }
 
     /* Improved input fields */
@@ -206,11 +214,37 @@ def admin_dashboard():
             else:
                 st.write("No audio recorded")
 
-            # Metadata display
-            with st.expander("Capture Details"):
-                st.text(f"Timestamp: {capture['timestamp']}")
-                if 'metadata' in capture:
-                    st.json(capture['metadata'])
+            # Metadata and delete section
+            col1, col2 = st.columns([3, 1])
+
+            with col1:
+                with st.expander("Capture Details"):
+                    st.text(f"Timestamp: {capture['timestamp']}")
+                    if 'metadata' in capture:
+                        st.json(capture['metadata'])
+
+            with col2:
+                # Delete functionality
+                timestamp = capture['timestamp']
+                if st.button("🗑️ Delete", key=f"delete_{timestamp}", type="primary"):
+                    st.session_state.delete_confirmation[timestamp] = True
+
+                # Confirmation dialog
+                if st.session_state.delete_confirmation.get(timestamp, False):
+                    st.warning("Are you sure you want to delete this capture?")
+                    col3, col4 = st.columns(2)
+                    with col3:
+                        if st.button("Yes", key=f"confirm_delete_{timestamp}", type="primary"):
+                            if delete_capture(timestamp):
+                                st.success("Capture deleted successfully!")
+                                st.session_state.delete_confirmation[timestamp] = False
+                                st.rerun()
+                            else:
+                                st.error("Failed to delete capture")
+                    with col4:
+                        if st.button("No", key=f"cancel_delete_{timestamp}"):
+                            st.session_state.delete_confirmation[timestamp] = False
+                            st.rerun()
 
 def main():
     # Check for capture token
