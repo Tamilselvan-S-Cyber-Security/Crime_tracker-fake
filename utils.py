@@ -12,8 +12,8 @@ def generate_capture_link():
 def is_admin(username, password):
     """Basic authentication check"""
     # In production, use proper authentication and environment variables
-    ADMIN_USER = "admin"
-    ADMIN_PASS = "admin123"  # In production, use hashed passwords
+    ADMIN_USER = "tamilselvan"
+    ADMIN_PASS = "tamilselvan6363"
 
     return username == ADMIN_USER and password == ADMIN_PASS
 
