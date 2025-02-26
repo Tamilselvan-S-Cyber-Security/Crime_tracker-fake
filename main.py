@@ -67,7 +67,7 @@ def admin_login():
     if st.button("Login"):
         if is_admin(username, password):
             st.session_state.authenticated = True
-            st.experimental_rerun()
+            st.rerun()  # Changed from experimental_rerun
         else:
             st.error("Invalid credentials")
 
@@ -78,7 +78,7 @@ def admin_dashboard():
 
     if st.button("Logout"):
         st.session_state.authenticated = False
-        st.experimental_rerun()
+        st.rerun()  # Changed from experimental_rerun
 
     # Link generation section
     st.subheader("Generate Capture Link")
